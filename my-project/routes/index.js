@@ -6,6 +6,6 @@ import { Blogrouter } from "./blog.routes.js";
 export const apiRouter = Router();
 
 apiRouter.use("/auth", authRouter);
-apiRouter.use("/", Postrouter);
-apiRouter.use("/", Commentrouter);
-apiRouter.use("/", Blogrouter);
+apiRouter.use("/p", Postrouter);
+apiRouter.use("/c", Commentrouter);
+apiRouter.use("/b", Blogrouter);

@@ -1,13 +1,21 @@
-import { Blog } from "../models/blog.model";
-import { User } from "../models/user.model";
+import { Blog } from "../models/blog.model.js";
+import { User } from "../models/user.model.js";
 
 // Blog Controller
 export const blogController = {
   // Create Blog
   async create(req, res) {
     try {
-      const userId = req.user.id; // User ID from token
+      const userId = req.params.userId; // User ID from URL params
       const { name, description } = req.body;
+
+      // Check if user exists
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
 
       const newBlog = new Blog({
         name,
@@ -32,7 +40,7 @@ export const blogController = {
   // Get user's blogs
   async getMyBlogs(req, res) {
     try {
-      const userId = req.user.id; // User ID from token
+      const userId = req.params.userId; // User ID from URL params
       const blogs = await Blog.find({ creator: userId });
 
       res.status(200).json({
@@ -50,9 +58,9 @@ export const blogController = {
   // Get joined blogs
   async getMyJoinedBlogs(req, res) {
     try {
-      const userId = req.user.id; // User ID from token
+      const userId = req.params.userId; // User ID from URL params
       const user = await User.findById(userId).populate("joinedBlogs");
-      
+
       res.status(200).json({
         message: "Joined blogs",
         data: user.joinedBlogs,
@@ -92,7 +100,7 @@ export const blogController = {
   // Update blog
   async update(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.params.userId; // User ID from URL params
       const blogId = req.params.id;
       const { name, description } = req.body;
 
@@ -130,7 +138,7 @@ export const blogController = {
   // Delete blog
   async delete(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.params.userId; // User ID from URL params
       const blogId = req.params.id;
 
       const blog = await Blog.findById(blogId);
@@ -183,7 +191,7 @@ export const blogController = {
   // Join blog
   async joinBlog(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.params.userId; // User ID from URL params
       const blogId = req.params.id;
 
       const blog = await Blog.findById(blogId);
@@ -219,7 +227,7 @@ export const blogController = {
   // Leave blog
   async leaveBlog(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.params.userId; // User ID from URL params
       const blogId = req.params.id;
 
       const blog = await Blog.findById(blogId);
@@ -249,5 +257,5 @@ export const blogController = {
         error: error.message,
       });
     }
-  },
+  }
 };

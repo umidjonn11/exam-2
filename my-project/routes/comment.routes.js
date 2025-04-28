@@ -1,11 +1,11 @@
 import express from 'express';
-import { commentController } from '../controllers/comment.controller';
-import { validateData } from '../middlewares/validation.middleware';
-import { commentCreateSchema, commentUpdateSchema } from '../validations';
+import { commentController } from '../controllers/comment.controller.js';
+import { validateData } from '../middlewares/validation.middleware.js';
+import { commentCreateSchema, commentUpdateSchema } from '../validations/index.js';
 export const Commentrouter = express.Router();
 
 // Comment routes
-router.post('/create',validateData(commentCreateSchema),commentController.create);
-router.put('/:commentId/update',validateData(commentUpdateSchema) ,commentController.update);
-router.delete('/:commentId/delete', commentController.delete);
+Commentrouter.post('/create',validateData(commentCreateSchema),commentController.create);
+Commentrouter.put('/:commentId/update',validateData(commentUpdateSchema) ,commentController.update);
+Commentrouter.delete('/:commentId/delete', commentController.delete);
 

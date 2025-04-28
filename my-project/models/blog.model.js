@@ -16,18 +16,18 @@ const blogSchema = new Schema(
       minlength: 10,
     },
     creator: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId, // This still refers to the User model
       ref: "User",
-      required: true,
+      required: true, // Ensure the creator field is still mandatory
     },
     members: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "User", // members will also reference the User model
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true } // Include createdAt and updatedAt timestamps
 );
 
 export const Blog = model("Blog", blogSchema);
