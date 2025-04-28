@@ -1,16 +1,14 @@
-import express from 'express';
-import { postController } from '../controllers/post.controller.js';
-import { validateData } from '../middlewares/validation.middleware.js';
-import { postCommentSchema, postCreateSchema, postUpdateSchema } from '../validations/index.js';
+import express from "express";
+import { postController } from "../controllers/post.controller.js";
+import { validateData } from "../middlewares/validation.middleware.js";
+import { postCreateSchema, postUpdateSchema } from "../validations/index.js";
 
-export const Postrouter = express.Router();
+export const PostRouter = express.Router();
 
-// Post routes
-Postrouter.post('/create',validateData(postCreateSchema), postController.create);
-Postrouter.get('/get-all/:blogId', postController.getAll);
-Postrouter.get('/:postId', postController.getById);
-Postrouter.put('/:postId/update', validateData(postUpdateSchema),postController.update);
-Postrouter.delete('/:postId/delete', postController.delete);
-Postrouter.get('/:blogId/sort-by-date', postController.sortByDate);
-// Postrouter.get('/:postId/get-comments',validateData(postCommentSchema) ,postController.getComments);
-
+// Post Routes
+PostRouter.post("/:userId/:blogId/create", validateData(postCreateSchema), postController.create);
+PostRouter.get("/:blogId/get-all", postController.getAll);
+PostRouter.get("/:postId", postController.getById);
+PostRouter.put("/:userId/:postId/update", validateData(postUpdateSchema), postController.update);
+PostRouter.delete("/:userId/:postId/delete", postController.delete);
+PostRouter.get("/:blogId/sort-by-date", postController.sortByDate);

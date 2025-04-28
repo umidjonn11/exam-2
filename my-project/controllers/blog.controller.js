@@ -101,7 +101,7 @@ export const blogController = {
   async update(req, res) {
     try {
       const userId = req.params.userId; // User ID from URL params
-      const blogId = req.params.id;
+      const blogId = req.params.blogId;
       const { name, description } = req.body;
 
       const blog = await Blog.findById(blogId);
@@ -189,40 +189,59 @@ export const blogController = {
   },
 
   // Join blog
-  async joinBlog(req, res) {
-    try {
-      const userId = req.params.userId; // User ID from URL params
-      const blogId = req.params.id;
+  // Join Blog
+async joinBlog(req, res) {
+  try {
+    const userId = req.params.userId;   // Correct: from URL
+    const blogId = req.params.blogId;   // Correct: from URL
 
-      const blog = await Blog.findById(blogId);
-      const user = await User.findById(userId);
+    // Fetch both user and blog
+    const user = await User.findById(userId);
+    const blog = await Blog.findById(blogId);
 
-      if (!blog) {
-        return res.status(404).json({
-          message: "Blog not found",
-        });
-      }
-
-      if (user.joinedBlogs.includes(blogId)) {
-        return res.status(400).json({
-          message: "Already a member of this blog",
-        });
-      }
-
-      user.joinedBlogs.push(blogId);
-      await user.save();
-
-      res.status(200).json({
-        message: "Joined the blog successfully",
-        data: user,
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: "Error joining the blog",
-        error: error.message,
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
       });
     }
-  },
+
+    // Check if blog exists
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+
+    // Make sure joinedBlogs array is initialized
+    if (!Array.isArray(user.joinedBlogs)) {
+      user.joinedBlogs = [];
+    }
+
+    // Check if user already joined
+    if (user.joinedBlogs.map(id => id.toString()).includes(blogId)) {
+      return res.status(400).json({
+        message: "Already a member of this blog",
+      });
+    }
+
+    // Add blog to joinedBlogs
+    user.joinedBlogs.push(blogId);
+    await user.save();
+
+    res.status(200).json({
+      message: "Joined the blog successfully",
+      data: user,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error joining the blog",
+      error: error.message,
+    });
+  }
+}
+,
 
   // Leave blog
   async leaveBlog(req, res) {

@@ -1,4 +1,3 @@
-// models/post.model.js
 import { Schema, model } from "mongoose";
 
 const postSchema = new Schema(

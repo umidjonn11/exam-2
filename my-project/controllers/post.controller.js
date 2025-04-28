@@ -1,21 +1,21 @@
-import { Post } from "../models/index.js";
-import { Blog } from "../models/index.js";
+import { Post } from "../models/post.model.js";
+import { Blog } from "../models/blog.model.js";
 
-// Post Controller
 export const postController = {
+  // Create Post
   async create(req, res) {
     try {
-      const userId = req.user.id; // User ID from token
-      const { blogId, title, content } = req.body;
+      const userId = req.params.userId; // Get userId from URL params
+      const blogId = req.params.blogId; // Get blogId from URL params
+      const { title, content } = req.body; // Post title and content come from the body
 
+      // Check if the Blog exists
       const blog = await Blog.findById(blogId);
-
       if (!blog) {
-        return res.status(404).json({
-          message: "Blog not found",
-        });
+        return res.status(404).json({ message: "Blog not found" });
       }
 
+      // Create a new Post document
       const newPost = new Post({
         title,
         content,
@@ -37,9 +37,10 @@ export const postController = {
     }
   },
 
+  // Get all Posts for a Blog
   async getAll(req, res) {
     try {
-      const blogId = req.params.blogId;
+      const blogId = req.params.blogId; // blogId from URL params
       const posts = await Post.find({ blog: blogId });
 
       res.status(200).json({
@@ -54,9 +55,10 @@ export const postController = {
     }
   },
 
+  // Get Post by ID
   async getById(req, res) {
     try {
-      const postId = req.params.id;
+      const postId = req.params.postId; // postId from URL params
       const post = await Post.findById(postId);
 
       if (!post) {
@@ -65,7 +67,7 @@ export const postController = {
         });
       }
 
-      post.views += 1; // Increment views count
+      post.views += 1; // Increment views on every fetch
       await post.save();
 
       res.status(200).json({
@@ -80,11 +82,12 @@ export const postController = {
     }
   },
 
+  // Update Post
   async update(req, res) {
     try {
-      const postId = req.params.id;
+      const userId = req.params.userId;
+      const postId = req.params.postId;
       const { title, content } = req.body;
-      const userId = req.user.id;
 
       const post = await Post.findById(postId);
 
@@ -117,10 +120,11 @@ export const postController = {
     }
   },
 
+  // Delete Post
   async delete(req, res) {
     try {
-      const postId = req.params.id;
-      const userId = req.user.id;
+      const userId = req.params.userId;
+      const postId = req.params.postId;
 
       const post = await Post.findById(postId);
 
@@ -149,6 +153,7 @@ export const postController = {
     }
   },
 
+  // Sort Posts by date (newest first)
   async sortByDate(req, res) {
     try {
       const blogId = req.params.blogId;
