@@ -16,3 +16,4 @@ Blogrouter.delete('/delete/:userId/:blogId', blogController.delete); // Delete b
 Blogrouter.get('/search', blogController.search); // Search blogs by name
 Blogrouter.post('/join-blog/:userId/:blogId', blogController.joinBlog); // Join blog
 Blogrouter.post('/leave-blog/:userId/:blogId', blogController.leaveBlog); // Leave blog
+

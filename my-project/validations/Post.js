@@ -6,7 +6,6 @@ export const postCreateSchema = z.object({
   content: z
     .string()
     .min(10, "Content must be at least 10 characters long"),
-  blogId: z.string().min(24, "Invalid Blog ID format").max(24),  // Assuming MongoDB ObjectId
 });
 
 export const postUpdateSchema = z.object({
